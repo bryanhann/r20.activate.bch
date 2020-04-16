@@ -1,3 +1,9 @@
+bhclone () {
+    name=$1
+    shift
+    git clone https://github.com/bryanhann/${name} ${*}
+}
+
 
 function wpy {
     echo $(python -c "import sys;print(sys.executable)");
@@ -30,3 +36,17 @@ function clean {
     rm .pytest_cache 2> /dev/null
 }
 
+downfind () {
+    target=$1
+    [ -z $2 ] && folder=$(grealpath ${PWD})
+    [ ! -z $2 ] && folder=$(grealpath $2)
+
+    while [ true ]; do
+        [ -d ${folder}/${target} ] && {
+            echo $(grealpath ${folder}/${target});
+            return;
+        }
+        [ "${folder}" = "$(dirname $folder)" ] && break
+        folder=$(dirname ${folder})
+    done
+}
